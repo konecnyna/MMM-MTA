@@ -1,8 +1,10 @@
-# Module: Hello World
-The `helloworld` module is one of the default modules of the MagicMirror. It is a simple way to display a static text on the mirror.
+# Module: MMM-MTA
+The `MMM-MTA` module is to get the MTA status of subway lines in NYC.
+
 ## Using the module
 
 To use this module, add it to the modules array in the `config/config.js` file:
+
 ````javascript
 modules: [
 	{
