@@ -31,17 +31,17 @@ Module.register("MMM-MTA",{
 		
 		this.linesData.map(line => {
 			var container = document.createElement("div");
-			if (line.status[0] !== "GOOD SERVICE") {
+			if (line.status[0] === "DELAYS") {
 				container.className = "animate-flicker";				
 			}
 
 
 			var background = document.createElement("div");
-			background.style = "background-color:"+line.color+"; padding:10px;"
+			//background.style = "color:"+line.color+"; padding:10px;"
 
 			var text = document.createElement("div");		
-			text.innerHTML = line.status;
-			text.style = "color: white";
+			text.innerHTML = line.name[0] + ": " + line.status;
+			text.style = "color: " + line.color;
 			background.appendChild(text);
 
 
