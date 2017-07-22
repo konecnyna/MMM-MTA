@@ -6,11 +6,10 @@ To use this module, add it to the modules array in the `config/config.js` file:
 ````javascript
 modules: [
 	{
-		module: "helloworld",
+		module: "MMM-MTA",
 		position: "bottom_bar",	// This can be any of the regions.
 		config: {
-			// See 'Configuration options' for more information.
-			text: "Hello world!"
+			lines: ["BDFM", "7"]
 		}
 	}
 ]
@@ -22,4 +21,4 @@ The following properties can be configured:
 
 | Option | Description
 | ------ | -----------
-| `text` | The text to display. <br><br> **Example:** `'Hello world!'` <br> **Default value:** `'Hello world!'`
+| `lines` | The lines that you care about.
