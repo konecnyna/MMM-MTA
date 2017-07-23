@@ -26,7 +26,9 @@ module.exports = NodeHelper.create({
 		}, function (error, response, body) {
 			parseString(body, function (err, result) {
 				var lines = result.service.subway[0].line.filter( line => {
-					line.color = self.getSubwayColor(line.name[0])
+					if (line.name[0] === "SIR") {
+						return false;
+					}
 					// Return specific lines are all if none are set.
 					return config.lines ? config.lines.indexOf(line.name[0]) > -1 : true;
 				});
@@ -48,35 +50,6 @@ module.exports = NodeHelper.create({
 		reloadTimer = setTimeout( () => {
 			this.getMTAData(self, config);
 		}, config.fetchInterval);
-	},
-
-	getSubwayColor: function(subwayName) {
-
-		if (subwayName === "123") {
-			return "#F44336";	
-		} else if (subwayName === "456") {
-			return "#4CAF50";
-		} else if (subwayName === "7") {
-			return "#9C27B0";
-		} else if (subwayName === "ACE") {
-			return "#3F51B5";
-		} else if (subwayName === "BDFM") {
-			return "#FF9800";
-		} else if (subwayName === "JZ") {
-			return "#795548";
-		} else if (subwayName === "G") {
-			return "#00E676";
-		} else if (subwayName === "L") {
-			return "grey";
-		} else if (subwayName === "NQR") {
-			return "#FFC107";
-		} else if (subwayName === "S") {
-			return "#9E9E9E";
-		} else if (subwayName === "SIR") {
-			return "#0D47A1";
-		}
-
-		return "transparent";
 	},
 
 	socketNotificationReceived: function (notification, payload) {

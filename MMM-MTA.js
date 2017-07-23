@@ -7,7 +7,7 @@
  * MIT Licensed.
  */
 
-Module.register("MMM-MTA",{
+Module.register("MMM-MTA", {
 
 	start: function() {
 		this.linesData = [];
@@ -26,7 +26,7 @@ Module.register("MMM-MTA",{
 	getDom: function() {
 		var wrapper = document.createElement("div");
 		wrapper.className = "mta";
-
+		
 		var table = document.createElement("table");		
 		var delaysText = "";
 
@@ -39,12 +39,18 @@ Module.register("MMM-MTA",{
 				row.style = "color: red";
 
 				var sanatizedText = this.stripHTML(line.text[0]);
-				delaysText += sanatizedText.replace(/\[(.*?)\]/g, this.createLineCircle(line, "$1").outerHTML);					
+				if (delaysText.length !== 0) {
+					delaysText += " ---- ";
+				}
+				delaysText += sanatizedText.replace(/\[(.*?)\]/g, ($0, $1) => {					
+					return this.createLineCircle($1, line.status[0]).outerHTML					
+				});			
+				delaysText += " ";		
 			}	
 
 			var circles = document.createElement("div");
 			line.name[0].split("").map(lineName => {				
-				circles.appendChild(this.createLineCircle(line, lineName));
+				circles.appendChild(this.createLineCircle(lineName, line.status[0]));
 			});
 			
 			var col1 = document.createElement("td");		
@@ -88,13 +94,12 @@ Module.register("MMM-MTA",{
 		return wrapper;
 	},
 
-	createLineCircle: function(line, lineName) {
+	createLineCircle: function(lineName, status) {
 		var circle = document.createElement("div");
 		circle.className = "circle";
-		circle.innerHTML = lineName;
-	
-		if (line && line.status[0] === "DELAYS") {
-			circle.style = "background-color: " + line.color + "; color:white;"
+		circle.innerHTML = lineName;	
+		if (status === "DELAYS") {
+			circle.style = "background-color: " + this.getSubwayColor(lineName) + "; color:white;"
 		}
 
 		return circle;
@@ -104,6 +109,38 @@ Module.register("MMM-MTA",{
 	   var tmp = document.createElement("div");
 	   tmp.innerHTML = html;
 	   return tmp.textContent || tmp.innerText || "";
+	},
+
+	getSubwayColor: function(train) {
+		if (this.matchSubway(train, "123")) {
+			return "#F44336";	
+		} else if (this.matchSubway(train, "456")) {
+			return "#4CAF50";
+		} else if (this.matchSubway(train, "7")) {
+			return "#9C27B0";
+		} else if (this.matchSubway(train, "ACE")) {
+			return "#3F51B5";
+		} else if (this.matchSubway(train, "BDFM")) {
+			return "#FF9800";
+		} else if (this.matchSubway(train, "JZ")) {
+			return "#795548";
+		} else if (this.matchSubway(train, "G")) {
+			return "#00E676";
+		} else if (this.matchSubway(train, "L")) {
+			return "grey";
+		} else if (this.matchSubway(train, "NQR")) {
+			return "#FFC107";
+		} else if (train === "S") { // False positive for SIR so check here.
+			return "#9E9E9E";
+		} else if (train === "SIR") {
+			return "#0D47A1";
+		}
+
+		return "transparent";
+	},
+
+	matchSubway: function(train, line) {
+		return line.includes(train) || train === line;
 	},
 
 	socketNotificationReceived: function (notification, payload) {
