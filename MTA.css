@@ -2,6 +2,21 @@
   from { opacity: 0; } 
 }
 
+.mta {
+	font-size: 14px;
+}
+
 .animate-flicker {
     animation: fadeIn 2s infinite alternate;
+}
+
+.circle {
+    border-radius: 50%;
+    width: 30px;
+    height: 30px; 
+    line-height: 30px;
+    display: inline-block;
+    background-color: #AAAAAA;
+    color: black;
+    margin: 2px;
 }
