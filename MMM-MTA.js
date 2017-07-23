@@ -14,41 +14,38 @@ Module.register("MMM-MTA",{
 		this.getStatus(this);		
 	},
 
-	// Define required scripts.
 	getStyles: function() {
 		return ["MTA.css"];
 	},
 
-	// Make node_helper to get new warning-data
 	getStatus: function (self) {
-		console.log("HIAYA!!!!!!!!!!!!!!!!!!!!!!!!!!!")
 		self.sendSocketNotification('GET_MTA_STATUS', self.config);		
 	},
 
-	// Override dom generator.
 	getDom: function() {
 		var wrapper = document.createElement("div");
 		
 		this.linesData.map(line => {
-			var container = document.createElement("div");
-			if (line.status[0] === "DELAYS") {
-				container.className = "animate-flicker";				
-			}
-
-
-			var background = document.createElement("div");
-			//background.style = "color:"+line.color+"; padding:10px;"
+			var container = document.createElement("div");		
 
 			var text = document.createElement("div");		
-			text.innerHTML = line.name[0] + ": " + line.status;
-			text.style = "color: " + line.color;
-			background.appendChild(text);
-
-
-			container.appendChild(background);
-       		wrapper.appendChild(container);    		
+			text.innerHTML = line.name[0] + ": " + line.status;		
+			if (line.status[0] === "DELAYS") {
+				container.className = "animate-flicker";				
+				text.style = "color: " + line.color;			
+			}
+				
+			container.appendChild(text);
+			wrapper.appendChild(container);    		
 
 		});
+
+		if (this.linesData && this.linesData.length > 0) {
+			console.log(this.linesData[0]);
+			var lastUpdated = document.createElement("div");			
+			lastUpdated.innerHTML = "Last updated: " + this.linesData[0].Time;
+			wrapper.appendChild(lastUpdated);			
+		}
 		
 		return wrapper;
 	},
