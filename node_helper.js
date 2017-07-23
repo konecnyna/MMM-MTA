@@ -30,7 +30,12 @@ module.exports = NodeHelper.create({
 					// Return specific lines are all if none are set.
 					return config.lines ? config.lines.indexOf(line.name[0]) > -1 : true;
 				});
-				self.sendSocketNotification('LINE_DATA', {data: lines});
+				self.sendSocketNotification('LINE_DATA', 
+					{
+						data: lines, 
+						updated: result.service.timestamp
+					}
+				);
 			});
 		});
 
