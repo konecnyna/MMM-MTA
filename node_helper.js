@@ -27,7 +27,8 @@ module.exports = NodeHelper.create({
 			parseString(body, function (err, result) {
 				var lines = result.service.subway[0].line.filter( line => {
 					line.color = self.getSubwayColor(line.name[0])
-					return config.lines.indexOf(line.name[0]) > -1;
+					// Return specific lines are all if none are set.
+					return config.lines ? config.lines.indexOf(line.name[0]) > -1 : true;
 				});
 				self.sendSocketNotification('LINE_DATA', {data: lines});
 			});
@@ -46,32 +47,31 @@ module.exports = NodeHelper.create({
 
 	getSubwayColor: function(subwayName) {
 
-		if (subwayName == "123") {
+		if (subwayName === "123") {
 			return "#F44336";	
-		} else if (subwayName == "456") {
+		} else if (subwayName === "456") {
 			return "#4CAF50";
-		} else if (subwayName == "7") {
+		} else if (subwayName === "7") {
 			return "#9C27B0";
-		} else if (subwayName == "ACE") {
+		} else if (subwayName === "ACE") {
 			return "#3F51B5";
-		} else if (subwayName == "BDFM") {
+		} else if (subwayName === "BDFM") {
 			return "#FF9800";
-		} else if (subwayName == "JZ") {
+		} else if (subwayName === "JZ") {
 			return "#795548";
-		} else if (subwayName == "G") {
-			return "#69F0AE";
-		} else if (subwayName == "L") {
+		} else if (subwayName === "G") {
+			return "#00E676";
+		} else if (subwayName === "L") {
 			return "grey";
-		} else if (subwayName == "NQR") {
+		} else if (subwayName === "NQR") {
 			return "#FFC107";
-		} else if (subwayName == "S") {
+		} else if (subwayName === "S") {
 			return "#9E9E9E";
-		} else if (subwayName == "SIR") {
+		} else if (subwayName === "SIR") {
 			return "#0D47A1";
 		}
 
-
-		return "red";
+		return "transparent";
 	},
 
 	socketNotificationReceived: function (notification, payload) {
