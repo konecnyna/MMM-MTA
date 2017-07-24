@@ -27,3 +27,5 @@ The following properties can be configured:
 | Option | Description
 | ------ | -----------
 | `lines` | The lines that you care about.
+| `show_delays_only` | Only display updates for lines that have delays
+| `delay_alert_flash` | Enabled/Disable slow fade alert for delays
