@@ -13,8 +13,9 @@ modules: [
 		header: "MTA",
 		config: {
 			lines: ['123', 'BDFM', 'JZ'],
-			show_delays_only: true,
-			delay_alert_flash: true
+			showDelaysOnly: true,
+			delayAlertFlash: true,
+			fetchInterval: 60000
 		}
 	}
 ]
@@ -27,5 +28,6 @@ The following properties can be configured:
 | Option | Description
 | ------ | -----------
 | `lines` | The lines that you care about.
-| `show_delays_only` | Only display updates for lines that have delays
-| `delay_alert_flash` | Enabled/Disable slow fade alert for delays
+| `showDelaysOnly` | Only display updates for lines that have delays
+| `delayAlertFlash` | Enabled/Disable slow fade alert for delays
+| `fetchInterval` | Check train status interval. Default is 5 minutes;

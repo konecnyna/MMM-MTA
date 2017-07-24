@@ -35,11 +35,10 @@ Module.register("MMM-MTA", {
 
 
 	socketNotificationReceived: function (notification, payload) {
-		Log.info(notification);
 		if (notification === 'LINE_DATA') {
 			this.linesData = payload.data;
 			this.lastUpdated = payload.updated;
-			this.updateDom(50);
+			this.updateDom(0);
 		}
 	}
 });
