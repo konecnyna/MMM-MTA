@@ -30,7 +30,7 @@ Module.register("MMM-MTA", {
 	},
 
 	getDom: function() {
-		return new MtaView(this.linesData, this.lastUpdated).build();
+		return new MtaView(this.linesData, this.lastUpdated, this.config).build();
 	},
 
 

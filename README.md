@@ -9,9 +9,12 @@ To use this module, add it to the modules array in the `config/config.js` file:
 modules: [
 	{
 		module: "MMM-MTA",
-		position: "bottom_bar",	// This can be any of the regions.
+		position: "top_right",
+		header: "MTA",
 		config: {
-			lines: ["BDFM", "7"]
+			lines: ['123', 'BDFM', 'JZ'],
+			show_delays_only: true,
+			delay_alert_flash: true
 		}
 	}
 ]

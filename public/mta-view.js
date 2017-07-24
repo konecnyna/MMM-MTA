@@ -2,10 +2,10 @@
 
 class MtaView {
 
-    constructor (linesData, updated) {
+    constructor (linesData, updated, config) {
         this.linesData = linesData;
         this.lastUpdated = updated;
-        console.log("hi", updated);
+        this.config = config;
     }
 
     build() {
@@ -14,51 +14,48 @@ class MtaView {
 		var table = document.createElement("table");		
 		var delaysText = "";
 
-		this.linesData.map(line => {
-			var row = document.createElement("tr");
-			table.appendChild(row);
+		this.linesData.map(line => {			
+			delaysText += this.getDelaysText(line);							
+			if (this.config.show_delays_only && line.status[0] !== "DELAYS") {
+				return;
+			}
 
-			if (line.status[0] === "DELAYS") {
-				row.className = "animate-flicker";				
-				row.style = "color: red";
-
-				var sanatizedText = this.stripHTML(line.text[0]);
-				if (delaysText.length !== 0) {
-					delaysText += " ---- ";
-				}
-				delaysText += sanatizedText.replace(/\[(.*?)\]/g, ($0, $1) => {					
-					return this.createLineCircle($1, line.status[0]).outerHTML					
-				});			
-				delaysText += " ";		
-			}	
-
-			var circles = document.createElement("div");
-			line.name[0].split("").map(lineName => {				
-				circles.appendChild(this.createLineCircle(lineName, line.status[0]));
-			});
-			
-			var col1 = document.createElement("td");		
-			var col2 = document.createElement("td");
-
-			col1.style = "float:left;";
-			col1.appendChild(circles);
-			col2.style = "float:right;";
-			col2.innerHTML = line.status;
-
-
-			row.appendChild(col1);
-			row.appendChild(col2);					
+			table.appendChild(this.createLineCircles(line));			
 		});
-		wrapper.appendChild(table);
+		
+		
+		if (table.childNodes.length === 0) {
+			wrapper.appendChild(this.makeAllClearDiv());
+		} else {
+			wrapper.appendChild(table);	
+			this.addDelayMarquee(wrapper, delaysText);
+		}
+		
+		return wrapper;
+    }
 
+    getDelaysText(line) {
+		if (line.status[0] !== "DELAYS") {
+			return "";
+		}
+		
+		var sanatizedText = this.stripHTML(line.text[0]);		
+		return sanatizedText.replace(/\[(.*?)\]/g, ($0, $1) => {					
+			return this.createLineCircle($1, line.status[0]).outerHTML					
+		});			
+    }
 
+    makeAllClearDiv(wrapper) {
+    	var lastUpdatedDiv = document.createElement("div");
+    	lastUpdatedDiv.innerHTML = "<h1>All good in the hood</h1>";
+    	return lastUpdatedDiv;
+    }
 
-		var lastUpdatedDiv = document.createElement("div");			
+    addDelayMarquee(wrapper, delaysText) {
+    	var lastUpdatedDiv = document.createElement("div");			
 		lastUpdatedDiv.className = "updated-text";
 		lastUpdatedDiv.innerHTML = "Last updated: " + this.lastUpdated;
 	    wrapper.appendChild(lastUpdatedDiv);			
-	
-
 		if (delaysText) {
 			// Divider
 			wrapper.appendChild(document.createElement("hr"));
@@ -73,12 +70,34 @@ class MtaView {
 			marquee.innerHTML = delaysText;
 			wrapper.appendChild(marquee);
 		}
-		
-		
-		return wrapper;
-
     }
 
+    createLineCircles(line) {
+    	var row = document.createElement("tr");			
+		if (line.status[0] === "DELAYS") {
+			if (this.config.delay_alert_flash) {
+				row.className = "animate-flicker";					
+			}
+			row.style = "color: red";		
+		}
+
+		var circles = document.createElement("div");
+		line.name[0].split("").map(lineName => {				
+			circles.appendChild(this.createLineCircle(lineName, line.status[0]));
+		});
+		
+		var col1 = document.createElement("td");		
+		var col2 = document.createElement("td");
+
+		col1.style = "float:left; padding-right: 16px";
+		col1.appendChild(circles);
+		col2.style = "float:right;";
+		col2.innerHTML = line.status;
+
+		row.appendChild(col1);
+		row.appendChild(col2);
+		return row;
+    }
 	createLineCircle(lineName, status) {
 		var circle = document.createElement("div");
 		circle.className = "circle";
