@@ -21,6 +21,10 @@ modules: [
 ]
 ````
 
+## Screenshot
+
+<img src="https://raw.githubusercontent.com/konecnyna/MMM-MTA/master/screenshot.png" width=500 />
+
 ## Configuration options
 
 The following properties can be configured:
