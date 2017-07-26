@@ -1,6 +1,10 @@
 # Module: MMM-MTA
 The `MMM-MTA` module is to get the MTA status of subway lines in NYC.
 
+# Install
+
+`git clone https://github.com/konecnyna/MMM-MTA.git; cd MMM-MTA/; npm install`
+
 ## Using the module
 
 To use this module, add it to the modules array in the `config/config.js` file:
