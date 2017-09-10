@@ -15,6 +15,13 @@
 	text-align: right;
 }
 
+.delays {
+  max-width: 500px;
+  max-height: 13.6em;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
 .circle {
     border-radius: 50%;
     width: 30px;

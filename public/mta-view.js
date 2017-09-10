@@ -59,16 +59,10 @@ class MtaView {
 		if (delaysText) {
 			// Divider
 			wrapper.appendChild(document.createElement("hr"));
-
-			var marquee = document.createElement("marquee");
-			marquee.className = "marquee";
-			
-			var att = document.createAttribute("scrollamount");
-		    att.value = "20";
-		    marquee.setAttributeNode(att);
-
-			marquee.innerHTML = delaysText;
-			wrapper.appendChild(marquee);
+			var div = document.createElement("div");
+			div.className = "delays";
+			div.innerHTML = delaysText;
+			wrapper.appendChild(div);
 		}
     }
 
