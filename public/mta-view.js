@@ -69,7 +69,7 @@ class MtaView {
     createLineCircles(line) {
     	var row = document.createElement("tr");			
 		if (line.status[0] === "DELAYS") {
-			if (this.config.delay_alert_flash) {
+			if (this.config.delayAlertFlash) {
 				row.className = "animate-flicker";					
 			}
 			row.style = "color: red";		
