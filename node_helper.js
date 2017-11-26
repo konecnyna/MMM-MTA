@@ -43,13 +43,14 @@ module.exports = NodeHelper.create({
             });
         });
 
+        this.getNextTrain();
 
         this.scheduleTimer(self, config);
     },
 
     getNextTrain: function() {
-        mta.schedule("F14", 21).then(function (result) {
-            self.sendSocketNotification('NEXT_TRAIN_DATA',result.schedule["F14"].N);
+        mta.schedule("F14", 21).then((result) => {
+            this.sendSocketNotification('NEXT_TRAIN_DATA',result.schedule["F14"].N);
         }); 
     },
     scheduleTimer: function(self, config) {
