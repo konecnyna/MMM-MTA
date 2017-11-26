@@ -59,23 +59,17 @@ class MtaView {
 		if (delaysText) {
 			// Divider
 			wrapper.appendChild(document.createElement("hr"));
-
-			var marquee = document.createElement("marquee");
-			marquee.className = "marquee";
-			
-			var att = document.createAttribute("scrollamount");
-		    att.value = "20";
-		    marquee.setAttributeNode(att);
-
-			marquee.innerHTML = delaysText;
-			wrapper.appendChild(marquee);
+			var div = document.createElement("div");
+			div.className = "delays";
+			div.innerHTML = delaysText;
+			wrapper.appendChild(div);
 		}
     }
 
     createLineCircles(line) {
     	var row = document.createElement("tr");			
 		if (line.status[0] === "DELAYS") {
-			if (this.config.delay_alert_flash) {
+			if (this.config.delayAlertFlash) {
 				row.className = "animate-flicker";					
 			}
 			row.style = "color: red";		

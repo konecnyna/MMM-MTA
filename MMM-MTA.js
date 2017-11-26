@@ -38,7 +38,7 @@ Module.register("MMM-MTA", {
 		if (notification === 'LINE_DATA') {
 			this.linesData = payload.data;
 			this.lastUpdated = payload.updated;
-			this.updateDom(0);
+			this.updateDom();
 		}
 	}
 });
