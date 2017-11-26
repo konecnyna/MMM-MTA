@@ -1,6 +1,11 @@
 var NodeHelper = require('node_helper');
 var request = require('request');
 var parseString = require('xml2js').parseString;
+const Mta = require('mta-gtfs');
+const mta = new Mta({
+  key: '2dd40d377edde733d34cab03c597a670', // only needed for mta.schedule() method  
+});
+
 var reloadTimer = null;
 
 module.exports = NodeHelper.create({
@@ -42,6 +47,11 @@ module.exports = NodeHelper.create({
         this.scheduleTimer(self, config);
     },
 
+    getNextTrain: function() {
+        mta.schedule("F14", 21).then(function (result) {
+            self.sendSocketNotification('NEXT_TRAIN_DATA',result.schedule["F14"].N);
+        }); 
+    },
     scheduleTimer: function(self, config) {
         clearTimeout(reloadTimer);
         reloadTimer = setTimeout(() => {
