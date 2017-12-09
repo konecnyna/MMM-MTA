@@ -10,7 +10,7 @@ var reloadTimer = null;
 
 module.exports = NodeHelper.create({
     defaults: {
-        fetchInterval: 5 * 60 * 1000
+        fetchInterval: 15 * 1000
     },
 
     start: function() {
