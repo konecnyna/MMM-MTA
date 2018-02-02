@@ -8,13 +8,18 @@ const mta = new Mta({
 
 var reloadTimer = null;
 
+var Countdown = require('countdown-js')
+
+
 module.exports = NodeHelper.create({
     defaults: {
-        fetchInterval: 15 * 1000
+        fetchInterval: 15 * 60 * 1000        
     },
 
     start: function() {
-        console.log('MTA helper started...')
+        console.log('MTA helper started...');
+        this.timer = false;
+        this.getNextTrain();        
     },
 
     getMTAData: function(self, config) {
@@ -36,23 +41,53 @@ module.exports = NodeHelper.create({
                     // Return specific lines are all if none are set.
                     return config.lines ? config.lines.indexOf(line.name[0]) > -1 : true;
                 });
+
                 self.sendSocketNotification('LINE_DATA', {
                     data: lines,
                     updated: result.service.timestamp
                 });
             });
         });
-
-        this.getNextTrain();
+        
 
         this.scheduleTimer(self, config);
     },
 
+    startClock: function(nextTrainTimes) {
+        var currentTime = new Date().getTime();
+        var nextDepartTime = 0;
+        for (var i = 0; i < nextTrainTimes.length; i++) {
+            var nextTrain = nextTrainTimes[i];
+            if (nextTrain.departureTime * 1000 > currentTime) {
+                nextDepartTime = new Date(nextTrain.departureTime * 1000);                                
+                break;
+            }
+        }
+
+        
+        if (this.timer) {            
+            this.timer.abort();
+        }
+        
+        this.timer = Countdown.timer(nextDepartTime, (timeLeft) => {            
+            this.sendSocketNotification('UPDATE_CLOCK', {
+                    data: timeLeft,
+                    time: nextDepartTime.getTime() / 1000
+            });
+        }, () => {            
+            console.log("nexgt");
+            this.getNextTrain();
+        });
+
+    },
+
     getNextTrain: function() {
         mta.schedule("F14", 21).then((result) => {
+            this.startClock(result.schedule["F14"].N);
             this.sendSocketNotification('NEXT_TRAIN_DATA',result.schedule["F14"].N);
         }); 
     },
+
     scheduleTimer: function(self, config) {
         clearTimeout(reloadTimer);
         reloadTimer = setTimeout(() => {

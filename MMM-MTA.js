@@ -13,7 +13,8 @@ Module.register("MMM-MTA", {
 		this.linesData = [];
 		this.nextTrainData = [];
 		this.lastUpdated = "Loading...";
-		this.getStatus(this);		
+		this.getStatus(this);
+		this.timeDiv = document.createElement("div");
 	},
 
 	getStyles: function() {
@@ -32,21 +33,28 @@ Module.register("MMM-MTA", {
 
 	getDom: function() {
 		const container = new MtaView(this.linesData, this.lastUpdated, this.config).build();
-			
-		if (this.nextTrainData.length > 2) {
-			var title = document.createElement("h2");		
-			title.innerHTML = "Next North bound F trains:"
-			container.appendChild(title);			
-			container.appendChild(document.createElement("hr"));
+				
+		var title = document.createElement("h2");		
+		title.innerHTML = "Next North bound F trains:"
+		container.appendChild(title);			
+		container.appendChild(document.createElement("hr"));
 
-			for (var i=0; i < 3; i++) {
+		
+		this.timeDiv = document.createElement("div");
+		this.timeDiv.style.textAlign = "right";
+		container.appendChild(this.timeDiv);	
+
+
+		if (this.nextTrainData.length > 3) {
+			for (var i = 1; i < 3; i++) {
 				var div = document.createElement("div");						
 				var dateString = moment.unix(this.nextTrainData[i].departureTime).format("hh:mm:ss a");
 				div.style.textAlign = "right";
 				div.innerHTML = dateString;
 				container.appendChild(div);	
-			}
+			}			
 		}
+	
 
 		return container;
 	},
@@ -62,6 +70,25 @@ Module.register("MMM-MTA", {
 		if (notification === 'NEXT_TRAIN_DATA') {
 			this.nextTrainData = payload;
 			this.updateDom();
+		}
+
+
+		if (notification === 'UPDATE_CLOCK') {
+			var minutes = payload.data.minutes;
+			var seconds = payload.data.seconds;
+
+			if (minutes < 10) {
+				minutes = `0${minutes}`
+			}
+
+			if (seconds < 10) {
+				seconds = `0${seconds}`
+			}
+
+			var formattedTime = moment.unix(payload.time).format("hh:mm:ss a");
+
+			this.timeDiv.innerHTML = "Departs in " + minutes + ":" + seconds + " minutes (" + formattedTime + ")";
+			
 		}
 	}
 });
