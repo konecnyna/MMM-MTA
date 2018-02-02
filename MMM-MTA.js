@@ -32,18 +32,36 @@ Module.register("MMM-MTA", {
 	},
 
 	getDom: function() {
-		const container = new MtaView(this.linesData, this.lastUpdated, this.config).build();
+		const mtaView = new MtaView(this.linesData, this.lastUpdated, this.config);
+		const container = mtaView.build();
 				
+		var table = document.createElement("table");		
+		var tr = document.createElement("tr");
+
+		var td = document.createElement("td");
+		var td2 = document.createElement("td");
+
+
+		var icon = mtaView.createLineCircle("F","DELAYS");		
+
 		var title = document.createElement("h2");		
-		title.innerHTML = "Next North bound F trains:"
-		container.appendChild(title);			
+		title.innerHTML = "Next North bound trains:"
+		
+		td.appendChild(icon);
+		td2.appendChild(title);
+		tr.appendChild(td);
+		tr.appendChild(td2);
+		table.appendChild(tr);
+		
+		
+		container.appendChild(table);
 		container.appendChild(document.createElement("hr"));
 
 		
 		this.timeDiv = document.createElement("div");
 		this.timeDiv.style.textAlign = "right";
 		container.appendChild(this.timeDiv);	
-
+		
 
 		if (this.nextTrainData.length > 3) {
 			for (var i = 1; i < 3; i++) {
@@ -58,6 +76,7 @@ Module.register("MMM-MTA", {
 
 		return container;
 	},
+
 
 
 	socketNotificationReceived: function (notification, payload) {
