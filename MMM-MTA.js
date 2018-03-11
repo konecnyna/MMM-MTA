@@ -44,8 +44,13 @@ Module.register("MMM-MTA", {
 
 		var icon = mtaView.createLineCircle("F","DELAYS");		
 
-		var title = document.createElement("h2");		
-		title.innerHTML = "Next North bound trains:"
+		var title = document.createElement("div");
+
+		container.appendChild(document.createElement("p"));	
+
+		title.innerHTML = "Next North bound trains:";
+		title.style = "font-weight:bold;";
+		title.className = "medium";
 		
 		td.appendChild(icon);
 		td2.appendChild(title);
@@ -64,7 +69,7 @@ Module.register("MMM-MTA", {
 		
 
 		if (this.nextTrainData.length > 3) {
-			for (var i = 1; i < 3; i++) {
+			for (var i = 1; i < 4; i++) {
 				var div = document.createElement("div");						
 				var dateString = moment.unix(this.nextTrainData[i].departureTime).format("hh:mm:ss a");
 				div.style.textAlign = "right";

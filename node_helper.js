@@ -1,6 +1,4 @@
 var NodeHelper = require('node_helper');
-var request = require('request');
-var parseString = require('xml2js').parseString;
 const Mta = require('mta-gtfs');
 const mta = new Mta({
   key: '2dd40d377edde733d34cab03c597a670', // only needed for mta.schedule() method  
@@ -28,27 +26,20 @@ module.exports = NodeHelper.create({
         }
 
         var timestamp = Date.now().toString();
-        var url = "http://web.mta.info/status/serviceStatus.txt";
-        request({
-            url: url,
-            method: 'GET'
-        }, function(error, response, body) {
-            parseString(body, function(err, result) {
-                var lines = result.service.subway[0].line.filter(line => {
-                    if (line.name[0] === "SIR") {
-                        return false;
-                    }
-                    // Return specific lines are all if none are set.
-                    return config.lines ? config.lines.indexOf(line.name[0]) > -1 : true;
-                });
+        mta.status().then( (data) => {
+            let lines = data.subway;
 
-                self.sendSocketNotification('LINE_DATA', {
-                    data: lines,
-                    updated: result.service.timestamp
-                });
+            if (config.lines) {
+                lines = data.subway.filter(line  => {
+                    return config.lines.includes(line.name)
+                });   
+            }
+            this.sendSocketNotification('LINE_DATA', {
+                data: lines
             });
-        });
-        
+           }).catch(err => {
+                console.log(err);
+           });
 
         this.scheduleTimer(self, config);
     },

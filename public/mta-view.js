@@ -4,7 +4,6 @@ class MtaView {
 
     constructor (linesData, updated, config) {
         this.linesData = linesData;
-        this.lastUpdated = updated;
         this.config = config;
     }
 
@@ -14,7 +13,7 @@ class MtaView {
 		var table = document.createElement("table");		
 		var delaysText = "";
 
-		this.linesData.map(line => {			
+		this.linesData.map(line => {	
 			delaysText += this.getDelaysText(line);							
 			if (this.config.show_delays_only && line.status[0] !== "DELAYS") {
 				return;
@@ -54,7 +53,7 @@ class MtaView {
     addDelayMarquee(wrapper, delaysText) {
     	var lastUpdatedDiv = document.createElement("div");			
 		lastUpdatedDiv.className = "updated-text";
-		lastUpdatedDiv.innerHTML = "Last updated: " + this.lastUpdated;
+		lastUpdatedDiv.innerHTML = "Last updated: " + moment().format('MMMM Do YYYY, h:mm:ss a');
 	    wrapper.appendChild(lastUpdatedDiv);			
 		if (delaysText) {
 			// Divider
@@ -67,6 +66,7 @@ class MtaView {
     }
 
     createLineCircles(line) {
+
     	var row = document.createElement("tr");			
 		if (line.status[0] === "DELAYS") {
 			if (this.config.delayAlertFlash) {
@@ -76,7 +76,7 @@ class MtaView {
 		}
 
 		var circles = document.createElement("div");
-		line.name[0].split("").map(lineName => {				
+		line.name.split("").map(lineName => {				
 			circles.appendChild(this.createLineCircle(lineName, line.status[0]));
 		});
 		
