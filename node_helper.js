@@ -74,8 +74,7 @@ module.exports = NodeHelper.create({
                     data: timeLeft,
                     time: nextDepartTime.getTime() / 1000
             });
-        }, () => {            
-            console.log("nexgt");
+        }, () => {                        
             this.getNextTrain();
         });
 
@@ -85,6 +84,11 @@ module.exports = NodeHelper.create({
         mta.schedule("F14", 21).then((result) => {
             this.startClock(result.schedule["F14"].N);
             this.sendSocketNotification('NEXT_TRAIN_DATA',result.schedule["F14"].N);
+        }).catch(err => {
+            console.log(err);
+            this.timer = Countdown.timer(30 * 1000, (timeLeft) => {}, () => {                
+                this.getNextTrain();
+            });
         }); 
     },
 
