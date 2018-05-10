@@ -14,7 +14,7 @@ Module.register("MMM-MTA", {
 		this.nextTrainData = [];
 		this.lastUpdated = "Loading...";
 		this.getStatus(this);
-		this.mtaRealtime = new MtaRealtime();
+		this.mtaRealtime = new MtaRealtime(this.config);
 	},
 
 	getStyles: function() {
@@ -54,11 +54,9 @@ Module.register("MMM-MTA", {
 			this.lastUpdated = payload.updated;
 			this.updateDom();
 		}
-console.log("-------------11111111111111111111--------->",payload)
-		if (notification === 'NEXT_TRAIN_DATA') {						
-			this.nextTrainData = payload;			
-			this.updateDom();
-			console.log("-------------11111111111111111111--------->",payload)
+
+		if (notification === 'NEXT_TRAIN_DATA') {			
+			this.mtaRealtime.updateTrains(payload)
 		}
 
 

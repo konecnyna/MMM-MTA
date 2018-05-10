@@ -2,15 +2,16 @@
 
 class MtaRealtime {
 
-    constructor () {       
-        this.helper = new MtaHelper();
-        this.timeDiv = document.createElement("div");      
+    constructor (config) {       
+        this.helper = new MtaHelper(config);
+        this.timeDiv = document.createElement("div");   
+        this.nextTrains = document.createElement("div");   
     }
 
     build(nextTrainData) {
-    	var wrapper = document.createElement("div");
-    	console.log(nextTrainData);
+    	var wrapper = document.createElement("div");    	
     	if (!nextTrainData) {
+    		wrapper.appendChild(loading);
     		return wrapper;
     	}
     	
@@ -47,18 +48,40 @@ class MtaRealtime {
 		this.timeDiv.style.textAlign = "right";
 		wrapper.appendChild(this.timeDiv);	
 		
-
-		if (nextTrainData.length > 3) {
-			for (var i = 1; i < 4; i++) {
-				var div = document.createElement("div");						
-				var dateString = moment.unix(nextTrainData[i].departureTime).format("hh:mm:ss a");
-				div.style.textAlign = "right";
-				div.innerHTML = dateString;
-				wrapper.appendChild(div);	
-			}			
-		}
+		
+		this.updateTrains(this.nextTrains);
+		
+		wrapper.appendChild(this.nextTrains);
 
 		return wrapper;
+    }
+
+    updateTrains(nextTrainData) {    	
+    	this.nextTrains.innerHTML = '';
+    	if(!nextTrainData || !nextTrainData.length) {
+    		var loading = document.createElement("div");    	
+    		loading.innerHTML = "<h4> Loading... </h4>";
+    		this.nextTrains.appendChild(loading);
+    		return;
+    	}
+
+    	if (nextTrainData.length > 1) {
+			for (var i = 1; i < nextTrainData.length; i++) {
+				var div = document.createElement("div");						
+				var dateString = moment.unix(nextTrainData[i].departureTime).format("hh:mm:ss a");
+
+				if (this.timeDiv.innerHTML.indexOf(dateString) !== -1) {
+					continue;
+				}
+
+				div.style.textAlign = "right";
+				div.innerHTML = dateString;
+				this.nextTrains.appendChild(div);	
+				if (i === 3) {
+					break;
+				}
+			}			
+		}
     }
 
     updateTime(html) {
