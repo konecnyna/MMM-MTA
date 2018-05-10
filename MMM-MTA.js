@@ -14,7 +14,7 @@ Module.register("MMM-MTA", {
 		this.nextTrainData = [];
 		this.lastUpdated = "Loading...";
 		this.getStatus(this);
-		this.timeDiv = document.createElement("div");
+		this.mtaRealtime = new MtaRealtime();
 	},
 
 	getStyles: function() {
@@ -27,59 +27,23 @@ Module.register("MMM-MTA", {
 
 	getScripts: function() {
 		return [
-			this.file('public/mta-view.js')		
+			this.file('public/mta-view.js'), 
+			this.file('public/mta-realtime.js'),
+			this.file('public/mta-helper.js')
 		];
 	},
 
 	getDom: function() {
+		const view = document.createElement("div");
+		view.className = "medium";
+		
 		const mtaView = new MtaView(this.linesData, this.lastUpdated, this.config);
-		const container = mtaView.build();
-				
-		var table = document.createElement("table");		
-		var tr = document.createElement("tr");
-
-		var td = document.createElement("td");
-		var td2 = document.createElement("td");
-
-
-		var icon = mtaView.createLineCircle("F","DELAYS");		
-
-		var title = document.createElement("div");
-
-		container.appendChild(document.createElement("p"));	
-
-		title.innerHTML = "Next North bound trains:";
-		title.style = "font-weight:bold;";
-		title.className = "medium";
-		
-		td.appendChild(icon);
-		td2.appendChild(title);
-		tr.appendChild(td);
-		tr.appendChild(td2);
-		table.appendChild(tr);
+		view.appendChild(mtaView.build(this.nextTrainData));
 		
 		
-		container.appendChild(table);
-		container.appendChild(document.createElement("hr"));
+		view.appendChild(this.mtaRealtime.build(this.nextTrainData));
 
-		
-		this.timeDiv = document.createElement("div");
-		this.timeDiv.style.textAlign = "right";
-		container.appendChild(this.timeDiv);	
-		
-
-		if (this.nextTrainData.length > 3) {
-			for (var i = 1; i < 4; i++) {
-				var div = document.createElement("div");						
-				var dateString = moment.unix(this.nextTrainData[i].departureTime).format("hh:mm:ss a");
-				div.style.textAlign = "right";
-				div.innerHTML = dateString;
-				container.appendChild(div);	
-			}			
-		}
-	
-
-		return container;
+		return view;
 	},
 
 
@@ -90,10 +54,11 @@ Module.register("MMM-MTA", {
 			this.lastUpdated = payload.updated;
 			this.updateDom();
 		}
-
-		if (notification === 'NEXT_TRAIN_DATA') {
-			this.nextTrainData = payload;
+console.log("-------------11111111111111111111--------->",payload)
+		if (notification === 'NEXT_TRAIN_DATA') {						
+			this.nextTrainData = payload;			
 			this.updateDom();
+			console.log("-------------11111111111111111111--------->",payload)
 		}
 
 
@@ -111,7 +76,7 @@ Module.register("MMM-MTA", {
 
 			var formattedTime = moment.unix(payload.time).format("hh:mm:ss a");
 
-			this.timeDiv.innerHTML = "Departs in " + minutes + ":" + seconds + " minutes (" + formattedTime + ")";
+			this.mtaRealtime.updateTime("Departs in " + minutes + ":" + seconds + " minutes (" + formattedTime + ")");
 			
 		}
 	}

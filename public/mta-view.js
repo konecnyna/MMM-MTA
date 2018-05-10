@@ -5,6 +5,7 @@ class MtaView {
     constructor (linesData, updated, config) {
         this.linesData = linesData;
         this.config = config;
+        this.helper = new MtaHelper();
     }
 
     build() {
@@ -34,7 +35,7 @@ class MtaView {
     }
 
     getDelaysText(line) {
-		if (line.status[0] !== "DELAYS") {
+		if (line.status !== "DELAYS") {
 			return "";
 		}
 		
@@ -54,7 +55,8 @@ class MtaView {
     	var lastUpdatedDiv = document.createElement("div");			
 		lastUpdatedDiv.className = "updated-text";
 		lastUpdatedDiv.innerHTML = "Last updated: " + moment().format('MMMM Do YYYY, h:mm:ss a');
-	    wrapper.appendChild(lastUpdatedDiv);			
+	    wrapper.appendChild(lastUpdatedDiv);
+	   
 		if (delaysText) {
 			// Divider
 			wrapper.appendChild(document.createElement("hr"));
@@ -68,7 +70,7 @@ class MtaView {
     createLineCircles(line) {
 
     	var row = document.createElement("tr");			
-		if (line.status[0] === "DELAYS") {
+		if (line.status === "DELAYS") {
 			if (this.config.delayAlertFlash) {
 				row.className = "animate-flicker";					
 			}
