@@ -35,7 +35,7 @@ Module.register("MMM-MTA", {
 
 	getDom: function() {
 		const view = document.createElement("div");
-		view.className = "medium";
+		view.className = "medium mta-container";
 		
 		const mtaView = new MtaView(this.linesData, this.lastUpdated, this.config);
 		view.appendChild(mtaView.build(this.nextTrainData));

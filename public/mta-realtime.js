@@ -9,12 +9,7 @@ class MtaRealtime {
     }
 
     build(nextTrainData) {
-    	var wrapper = document.createElement("div");    	
-    	if (!nextTrainData) {
-    		wrapper.appendChild(loading);
-    		return wrapper;
-    	}
-    	
+    	var wrapper = document.createElement("div");    	    	
 		
 		var table = document.createElement("table");		
 		var tr = document.createElement("tr");

@@ -16,13 +16,8 @@ module.exports = NodeHelper.create({
 
     start: function() {
         console.log('MTA helper started...');
-        this.timer = false;
-
-        const test = setTimeout(() => {
-            this.getNextTrain();    
-            clearTimeout(test); 
-        }, 5*1000);
-             
+        this.timer = false;  
+        this.getNextTrain();           
     },
 
     getMTAData: function(self, config) {
@@ -76,16 +71,26 @@ module.exports = NodeHelper.create({
 
     },
 
-    getNextTrain: function() {            
-        mta.schedule("F14", 21).then((result) => {
+    getNextTrain: function() {
+        mta.schedule("F14", 21).then((result) => {            
+            if (Object.keys(result).length === 0) {
+                setTimeout(() => {                    
+                    this.getNextTrain();
+                }, 1000 * 60);               
+               return;
+            }
+            
+
             this.startClock(result.schedule["F14"].N);            
-            this.sendSocketNotification('NEXT_TRAIN_DATA',result.schedule["F14"].N);
+            this.sendSocketNotification('NEXT_TRAIN_DATA',result.schedule["F14"].N);   
+        
         }).catch(err => {
             console.log(err);
             this.timer = Countdown.timer(30 * 1000, (timeLeft) => {}, () => {                
                 this.getNextTrain();
             });
         }); 
+    
     },
 
     scheduleTimer: function(self, config) {
