@@ -1,17 +1,11 @@
 {
-  "name": "helloworld",
+  "name": "MMM-MTA",
   "version": "1.0.0",
-  "description": "The `helloworld` module is one of the default modules of the MagicMirror. It is a simple way to display a static text on the mirror. ## Using the module",
-  "main": "helloworld.js",
-  "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
-  },
+  "description": "MTA Status for the magic mirror",
+  "main": "MMM-MTA.js",  
   "author": "",
   "license": "ISC",
   "dependencies": {
-    "countdown-js": "git+https://github.com/audiolion/countdown.js.git",
-    "mta-gtfs": "^1.1.0",
-    "request": "^2.81.0",
-    "xml2js": "^0.4.17"
+    "mta-gtfs": "^1.1.0"
   }
 }

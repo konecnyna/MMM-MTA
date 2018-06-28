@@ -28,7 +28,6 @@ Module.register("MMM-MTA", {
 	getScripts: function() {
 		return [
 			this.file('public/mta-view.js'), 
-			this.file('public/mta-realtime.js'),
 			this.file('public/mta-helper.js')
 		];
 	},
@@ -40,9 +39,6 @@ Module.register("MMM-MTA", {
 		const mtaView = new MtaView(this.linesData, this.lastUpdated, this.config);
 		view.appendChild(mtaView.build(this.nextTrainData));
 		
-		
-		view.appendChild(this.mtaRealtime.build(this.nextTrainData));
-
 		return view;
 	},
 
