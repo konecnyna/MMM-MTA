@@ -44,7 +44,8 @@ class MtaHelper {
       if (this.config.delayAlertFlash) {
         row.className = 'animate-flicker';
       }
-      row.style = 'color: red';
+      
+      row.style = 'color: #F44336';
     }
 
     var circles = document.createElement('div');
